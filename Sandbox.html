@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+
+</head>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<body>
+    <script>
+        var log = function (line) {
+            console.log(line);
+        }
+        function parse(x) {
+            if(x*1==x){
+                return x*1
+            }
+            return x 
+        }
+
+        var filter = function (key,value,subSet,data){
+            var dataSet = [];
+            for( d in data){
+                if(data[d][key]==value){
+                    var subDict={}
+                    for ([key, val] of Object.entries(data[d])) {
+                        if(typeof data[d][key] =='number'){
+                            if(subSet.includes(key)){
+                                subDict[key]=data[d][key];
+                            }
+                        }
+                    }
+                    dataSet.push(subDict);
+                }
+            }
+
+            return dataSet;
+        }
+
+        var toSet =  function(key,data){
+            var dataSet = new Set();
+            for( d in data){
+                if(data[d][key]!=undefined){
+                    dataSet.add(data[d][key]);
+                }
+            }
+            return Array.from(dataSet);
+        }
+
+        var doData = function (data) {
+            for (var d = 0; d < data.length; d++) {
+                for ([key, val] of Object.entries(data[d])) {
+                    data[d][key] = parse(val)
+                }
+            }
+        }
+        d3.csv("../../Data/EssexData/Person.csv").then(
+            function(data){
+                log("loaded");
+                doData(data);
+                let iterate = toSet("time",data);
+                log(filter("time",iterate[11],['id_person','dag','potentialearnings'],data));
+            },
+            function () {
+                console.log("Error");
+            }
+        )
+    </script>
+</body>
+
+</html>
