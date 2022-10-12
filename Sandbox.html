@@ -1,79 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 
-</head>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-
-<body>
+  <body>
+    <svg id="plot" style="width: 500px; height: 500px"></svg>
     <script>
-        var log = function (line) {
-            console.log(line);
-        }
-        function parse(x) {
-            if(x*1==x){
-                return x*1
-            }
-            return x 
-        }
+      var log = function (line) {
+        console.log(line);
+      };
 
-        var filter = function (fkey,value,subSet,data){
-            var dataSet = [];
-            for( d in data){
-                if(data[d][fkey]==value){
-                    var subDict={}
-                    for ([key, val] of Object.entries(data[d])) {
-                        if(typeof data[d][key] =='number'){
-                            if(subSet.includes(key)){
-                                subDict[key]=data[d][key];
-                            }
-                        }
-                    }
-                    dataSet.push(subDict);
-                }
-            }
-            return dataSet;
-        }
+      var data = [
+        { a: 10, b: 10, t: 0, c: "red" },
+        { a: 20, b: 20, t: 0, c: "red" },
+        { a: 30, b: 30, t: 0, c: "red" },
+        { a: 50, b: 40, t: 1, c: "blue" },
+        { a: 60, b: 50, t: 1, c: "blue" },
+      ];
+      log(data);
 
-        var toSet =  function(key,data){
-            var dataSet = new Set();
-            for( d in data){
-                if(data[d][key]!=undefined){
-                    dataSet.add(data[d][key]);
-                }
-            }
-            return Array.from(dataSet);
-        }
+      const xSize = 500;
+      const ySize = 500;
+      const margin = 40;
+      const xMax = xSize - margin * 2;
+      const yMax = ySize - margin * 2;
 
-        var doData = function (data) {
-            for (var d = 0; d < data.length; d++) {
-                for ([key, val] of Object.entries(data[d])) {
-                    data[d][key] = parse(val)
-                }
+      const svg = d3
+        .select("#plot")
+        .append("svg")
+        .append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")");
+      // X Axis
+      const xScale = d3.scaleLinear().domain([0, 500]).range([0, xMax]);
+
+      svg
+        .append("g")
+        .attr("transform", "translate(0," + yMax + ")")
+        .call(d3.axisBottom(xScale));
+
+      // Y Axis
+      const yScale = d3.scaleLinear().domain([0, 500]).range([yMax, 0]);
+
+      svg.append("g").call(d3.axisLeft(yScale));
+
+      svg
+        .append("g")
+        .selectAll("dot")
+        .data(data)
+        .enter()
+        .append(function(d){
+            if(d["t"] == 0 ){
+                return" circle"
             }
-        }
-        d3.csv("Data/Person.csv").then(
-            function(data){
-                log("loaded");
-                doData(data);
-                let iterate = toSet("time",data);
-                let fdata = filter("time",iterate[10],['id_person','dag','potentialearnings'],data);
-                console.log(d3.min(fdata, function(d) { return d.dag; }));
-                console.log(d3.min(fdata, function(d) { return d.potentialearnings; }));
-                console.log(d3.max(fdata, function(d) { return d.dag; }));
-                console.log(d3.max(fdata, function(d) { return d.potentialearnings; }));
-            },
-            function () {
-                console.log("Error");
-            }
-        )
+        })
+        .attr("cx", function (d) {
+          return d["a"];
+        })
+        .attr("cy", function (d) {
+          return d["b"];
+        })
+        .attr("r", 3)
+        .style("fill", function(d){
+            return d["c"]
+        })
     </script>
-</body>
-
+  </body>
 </html>
