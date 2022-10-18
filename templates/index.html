@@ -31,6 +31,14 @@
     </div>
 
     <script>
+      var display = function (d,data) {
+        var htmlString = "<p>ID: " + data[d][0] + "</p>";
+
+        for (let i = 1; i < data[d].length; i++) {
+          htmlString += "<p>Val" + i + ": " + data[d][i] + "</p>";
+        }
+        document.getElementById("output").innerHTML = htmlString;
+      };
       var update = function (data) {
         console.log(data[10]["id_person"]);
         svg
@@ -59,8 +67,7 @@
                 .on("mouseover", function (d) {
                   d3.select(this).attr("cursor", "pointer");
                   if (this.toggle) {
-                    display(this.id);
-                    console.log(this.id);
+                    console.log(this.id_person);
                   }
                 })
                 .on("mouseout", function () {}),
