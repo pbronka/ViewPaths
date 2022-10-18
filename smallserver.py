@@ -1,43 +1,26 @@
-from flask import Flask, render_template
-from flask_sock import Sock
-import random as rnd
-import time
+from flask import Flask, render_template, request
 import threading
+import webbrowser
+import json 
+import pandas as pd
 
-
-class MyThread(threading.Thread):
-  # overriding constructor
-  def __init__(self):
-    # calling parent class constructor
-    threading.Thread.__init__(self)
-    print("h1S")
-    
-  # define your own run method
-  def run(self):
-    for i in range(10):
-        time.sleep(1)
-        sock.send(i)
+df = pd.read_csv('Data/Person.csv',low_memory=False,index_col=None)
 
 app = Flask(__name__)
-sock = Sock(app)
 
 @app.route('/')
 def index():
-    print("here")
     return render_template('index.html')
 
-
-@sock.route('/echo')
-def echo(sock):
-    print("echo")
-    thread1 = MyThread()
-    thread1.start()
-    # while True:
-    #     data = sock.receive()
-    #     sock.send(data)
-    #     for i in range(10):
-    #         time.sleep(1)
-    #         sock.send(i)
+@app.route("/getdata", methods = ['GET'])
+def getdata():
+  year = request.args.get('year')
+  print(type(year),year)
+  df_slect = df[df['time'] == int(year)]
+  return df_slect.to_json(orient='records')    
 
 if __name__ == "__main__":
-    app.run()
+    port = 5432
+    url = "http://127.0.0.1:{0}".format(port)
+    threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
+    app.run(port=port, debug=False)
