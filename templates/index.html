@@ -54,7 +54,7 @@
                 .attr("cy", function (d) {
                   return d["dag"];
                 })
-                .attr("r", 1)
+                .attr("r", 4)
                 .style("fill", "Red")
                 .on("click", function () {
                   this.toggle = !this.toggle; // declared variable setting it to true
@@ -67,7 +67,7 @@
                 .on("mouseover", function (d) {
                   d3.select(this).attr("cursor", "pointer");
                   if (this.toggle) {
-                    console.log(this);
+                    console.log(d["potentialearnings"]);
                   }
                 })
                 .on("mouseout", function () {}),
