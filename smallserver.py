@@ -17,7 +17,7 @@ def getdata():
   year = request.args.get('year')
   print(type(year),year)
   df_slect = df[df['time'] == int(year)]
-  return df_slect.to_json(orient='records')    
+  return df_slect[['id_person','dag','potentialearnings']].to_json(orient='records')    
 
 if __name__ == "__main__":
     port = 5432
