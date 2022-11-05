@@ -5,6 +5,10 @@ Data visualization
 required python libs:
 flask
 pandas
+You will need to have
+a "Data" directory for the data
+and for this demo
+Data/Person.csv
 
 ## Run
 python smallserver.py
