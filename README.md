@@ -17,7 +17,7 @@ Data/Person.csv
 python smallserver.py
 
 ## How to use
-Very simple proof of concept ( graph is small and not correct orientation)
+Very simple proof of concept (no axis or ledgend)
 
 Click on years to get that data ( dag','potentialearnings )
 
