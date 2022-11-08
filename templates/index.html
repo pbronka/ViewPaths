@@ -10,7 +10,7 @@
   </head>
 
   <body>
-    <h4>Flask Demo 3</h4>
+    <h4>Flask Demo 3.1</h4>
     <div class="container" style="margin-top: 80px">
       <div class="row">
         <div class="col-sm-7">
@@ -48,13 +48,16 @@
             (enter) =>
               enter
                 .append("circle")
+                .attr("cy", function (d) {
+                  return 300-d["potentialearnings"];
+                })
                 .attr("cx", function (d) {
-                  return d["potentialearnings"];
+                  return d["dag"]*4;
                 })
                 .attr("cy", function (d) {
                   return d["dag"];
                 })
-                .attr("r", 4)
+                .attr("r", 1)
                 .style("fill", "Red")
                 .on("click", function () {
                   this.toggle = !this.toggle; // declared variable setting it to true
@@ -73,11 +76,11 @@
                 .on("mouseout", function () {}),
             (update) =>
               update
-                .attr("cx", function (d) {
-                  return d["potentialearnings"];
-                })
                 .attr("cy", function (d) {
-                  return d["dag"];
+                  return 300-d["potentialearnings"];
+                })
+                .attr("cx", function (d) {
+                  return d["dag"]*4;
                 }),
             (exit) => exit.remove()
           );
