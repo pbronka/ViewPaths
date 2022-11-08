@@ -12,6 +12,7 @@ app = Flask(__name__)
 def index():
     return render_template('d3.html')
 
+
 @app.route("/getdata", methods = ['GET'])
 def getdata():
   year = request.args.get('year')
