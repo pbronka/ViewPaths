@@ -25,7 +25,14 @@ def getfiles():
     print(csv_files)
     return json.dumps(csv_files)
 
-
+@app.route("/getunique", methods = ['GET'])
+def getunique():
+    fileChoice = request.args.get("fileChoice")
+    header = request.args.get("header")
+    print(fileChoice,header)
+    hf = pd.read_csv('Data/'+fileChoice,low_memory=False,index_col=None)
+    return json.dumps(pd.unique(hf[header]).tolist())
+    
 @app.route("/getfileheaders", methods = ['GET'])
 def getfileheaders():
     file_name = request.args.get("file")
