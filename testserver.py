@@ -5,7 +5,7 @@ import json
 import pandas as pd
 import os
 
-df = pd.read_csv('Data/Person.csv',low_memory=False,index_col=None)
+df=None
 
 app = Flask(__name__,static_url_path='', 
             static_folder='static',
@@ -22,24 +22,23 @@ def getfiles():
     for f in dir_list:
         if "csv" in f:
             csv_files.append(f)
-    print(csv_files)
     return json.dumps(csv_files)
 
 @app.route("/getunique", methods = ['GET'])
 def getunique():
+    global df
     fileChoice = request.args.get("fileChoice")
     header = request.args.get("header")
-    print(fileChoice,header)
-    hf = pd.read_csv('Data/'+fileChoice,low_memory=False,index_col=None)
-    return json.dumps(pd.unique(hf[header]).tolist())
+    return json.dumps(pd.unique(df[header]).tolist())
     
 @app.route("/getfileheaders", methods = ['GET'])
 def getfileheaders():
+    global df
     file_name = request.args.get("file")
-    print(file_name)
     with open("Data/"+file_name) as f:
         first_line = f.readline().rstrip().split(",")
         print(first_line)
+    df = pd.read_csv('Data/'+file_name,low_memory=False,index_col=None)
     return json.dumps(first_line)
 
 @app.route("/getdata", methods = ['GET'])

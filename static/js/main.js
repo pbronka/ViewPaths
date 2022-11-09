@@ -1,41 +1,63 @@
 var fileChoice = ""
+var group = ""
+var xAxis = ""
+var yAxis = ""
 
-var filemenu = function (data) {
-  document.getElementById("filemenu").innerHTML = ""
+
+
+var fillList = function(menuId,functionId,data){
+  document.getElementById(menuId).innerHTML = ""
   for (f in data) {
     fstring = "'"+data[f]+"'"
-    line = '<a class="dropdown-item" onclick="getfileheaders('+fstring+')">' + data[f] + '</a>'
-    document.getElementById("filemenu").innerHTML += line
+    line = '<option onclick="'+functionId+'('+fstring+')">' + data[f] + '</option>'
+    document.getElementById(menuId).innerHTML += line
   }
+}
 
+var fillSelect = function(menuId,functionId,data){
+  document.getElementById(menuId).innerHTML = ""
+  for (f in data) {
+    fstring = "'"+data[f]+"'"
+    line = '<option onclick="'+functionId+'()">' + data[f] + '</option>'
+    document.getElementById(menuId).innerHTML += line
+  }
+}
+
+var setXaxis = function(){
+  let select = document.getElementById('xaxismenu');
+  var x = select.options[select.selectedIndex].text;  
+  console.log("x"+x);
+  xAxis=x
+}
+var setYaxis = function(){
+  let select = document.getElementById('yaxismenu');
+  let y = select.options[select.selectedIndex].text;  
+  console.log("y"+x);
+  yAxis=y
+}
+var setGroup = function(){
+  let select = document.getElementById('groupbymenu');
+  let x = select.options[select.selectedIndex].text;  
+  console.log("g"+x);
+  group=x
+}
+
+var filemenu = function (data) {
+  fillList("filemenu","getfileheaders",data)
 }
 
 
 var headermenu = function (data) {
-  document.getElementById("headermenu").innerHTML = ""
-  for (f in data) {
-    fstring = "'"+data[f]+"'"
-    line = '<a class="dropdown-item" onclick="getunique('+fstring+')">' + data[f] + '</a>'
-    document.getElementById("headermenu").innerHTML += line
-  }
-
+  document.getElementById("filelable").innerHTML="Files"
+  fillList("headermenu","getunique",data)
+  fillSelect("xaxismenu","setXaxis",data)
+  fillSelect("yaxismenu","setYaxis",data)
 }
 
 
-var groupbymenu = function (lable,data) {
-  document.getElementById("groupbymenu").innerHTML = ""
-  document.getElementById("groupbylable").innerHTML = lable
-  
-  for (f in data) {
-    fstring = "'"+data[f]+"'"
-    line = '<a class="dropdown-item" onclick="getunique('+fstring+')">' + data[f] + '</a>'
-    document.getElementById("groupbymenu").innerHTML += line
+var groupbymenu = function (data) {
+  fillSelect("groupbymenu","setGroup",data)
   }
-
-}
-
-
-
 
 
 var output = function (data) {
@@ -60,7 +82,7 @@ var getunique = function (header) {
   fetch(url)
     // Handle success
     .then((response) => response.json()) // convert to json
-    .then((json) => groupbymenu(header,json)) //print data to console
+    .then((json) => groupbymenu(json)) //print data to console
     .catch((err) => console.log("Request Failed", err)); // Catch errors
 };
 
@@ -77,10 +99,9 @@ var getfiles = function () {
 
 var getfileheaders = function (file) {
   fileChoice = file
-  document.getElementById("fileslable").innerHTML = fileChoice
-  document.getElementById("output").innerHTML =fileChoice
   var url = new URL("http://127.0.0.1:5432/getfileheaders");
   url.searchParams.append("file", file);
+  document.getElementById("filelable").innerHTML="Loading"
   fetch(url)
     // Handle success
     .then((response) => response.json()) // convert to json
@@ -88,6 +109,6 @@ var getfileheaders = function (file) {
     .catch((err) => console.log("Request Failed", err));
 
 }
+console.log("0.006");
 
-document.getElementById("output").innerHTML = "MAIN"
 getfiles()
