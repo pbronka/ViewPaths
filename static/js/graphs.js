@@ -5,14 +5,14 @@ let dimensions = {
   };
 
 var display = function (d, data) {
-    
     var htmlString = "<p>ID: " + data[d][0] + "</p>";
-
     for (let i = 1; i < data[d].length; i++) {
         htmlString += "<p>Val" + i + ": " + data[d][i] + "</p>";
     }
     document.getElementById("output").innerHTML = htmlString;
 };
+
+
 var update = function (data) {
    
     const xAccessor = (d) => d[xAxis]
@@ -20,11 +20,11 @@ var update = function (data) {
     
     const yScale = d3.scaleLinear()
     .domain(d3.extent(data, yAccessor))
-    .range([dimensions.containerHeight, 10]).clamp(true)
+    .range([dimensions.containerHeight-10, 10])
     
-  const xScale = d3.scaleLinear()
-  .domain(d3.extent(data, xAccessor))
-    .range([10, dimensions.containerWidth]).nice().clamp(true)
+    const xScale = d3.scaleLinear()
+    .domain(d3.extent(data, xAccessor))
+    .range([10, dimensions.containerWidth-10])
 
     const xAxisL = d3.axisBottom(xScale)
 
