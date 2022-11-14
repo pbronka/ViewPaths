@@ -1,4 +1,11 @@
+let dimensions = {
+    width: 400,
+    height: 500,
+    margins: 50,
+  };
+
 var display = function (d, data) {
+    
     var htmlString = "<p>ID: " + data[d][0] + "</p>";
 
     for (let i = 1; i < data[d].length; i++) {
@@ -7,7 +14,27 @@ var display = function (d, data) {
     document.getElementById("output").innerHTML = htmlString;
 };
 var update = function (data) {
-    console.log(data[10]["id_person"]);
+   
+    const xAccessor = (d) => d[xAxis]
+    const yAccessor = (d) => d[yAxis]
+    
+    const yScale = d3.scaleLinear()
+    .domain(d3.extent(data, yAccessor))
+    .range([dimensions.containerHeight, 10]).clamp(true)
+    
+  const xScale = d3.scaleLinear()
+  .domain(d3.extent(data, xAccessor))
+    .range([10, dimensions.containerWidth]).nice().clamp(true)
+
+    const xAxisL = d3.axisBottom(xScale)
+
+    svg.select("#area")
+    .call(xAxisL)
+    .attr(
+    "transform",
+    `translate(${dimensions.margins}, ${dimensions.margins})`
+    );
+
     svg
         .selectAll("circle")
         .data(data, (d) => d["id_person"])
@@ -15,12 +42,8 @@ var update = function (data) {
             (enter) =>
                 enter
                     .append("circle")
-                    .attr("cy", function (d) {
-                        return 300 - d[yAxis];
-                    })
-                    .attr("cx", function (d) {
-                        return d[xAxis] * 4;
-                    })
+                    .attr("cx", d => xScale(xAccessor(d)))
+                    .attr("cy", d => yScale(yAccessor(d)))
                     .attr("r", 3)
                     .style("fill", "Red")
                     .on("click", function (d) {
@@ -54,13 +77,26 @@ var update = function (data) {
                     }),
             (update) =>
                 update
-                    .attr("cy", function (d) {
-                        return 300 - d[yAxis];
-                    })
-                    .attr("cx", function (d) {
-                        return d[xAxis] * 4;
-                    }),
+                .attr("cx", d => xScale(xAccessor(d)))
+                .attr("cy", d => yScale(yAccessor(d))),
             (exit) => exit.remove()
         );
 };
-const svg = d3.select("#plot").append("svg").append("g");
+
+
+
+
+
+dimensions.containerWidth = dimensions.width - dimensions.margins * 2;
+dimensions.containerHeight = dimensions.height - dimensions.margins * 2;
+
+
+
+// Scales
+
+
+const svg = d3.select("#plot")
+.attr("width", dimensions.width)
+.attr("height", dimensions.height)
+.append("svg").append("g").attr("id","area")
+;
