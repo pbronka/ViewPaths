@@ -1,9 +1,21 @@
 var fileChoice = ""
-var group = ""
-var xAxis = ""
-var yAxis = ""
+var time = ""
+var xAxis = "dag"
+var yAxis = "potentialearnings"
+var personId = ""
 
+var personIdData={}
 
+// var update = function(data){
+//   console.log(data);
+// }
+
+var getdata = function(){
+  if((time!='')&&(xAxis!="")&&(yAxis!="")){
+    getSelectedData()
+  }
+
+}
 
 var fillList = function(menuId,functionId,data){
   document.getElementById(menuId).innerHTML = ""
@@ -25,26 +37,22 @@ var fillSelect = function(menuId,functionId,data){
 
 var setXaxis = function(){
   let select = document.getElementById('xaxismenu');
-  var x = select.options[select.selectedIndex].text;  
-  console.log("x"+x);
-  xAxis=x
+  xAxis = select.options[select.selectedIndex].text;  
+  getdata()
 }
 var setYaxis = function(){
   let select = document.getElementById('yaxismenu');
-  let y = select.options[select.selectedIndex].text;  
-  console.log("y"+x);
-  yAxis=y
+  yAxis= select.options[select.selectedIndex].text;  
+  getdata()
+
 }
 var setGroup = function(){
   let select = document.getElementById('groupbymenu');
-  let x = select.options[select.selectedIndex].text;  
-  console.log("g"+x);
-  group=x
+  time = select.options[select.selectedIndex].text;  
+  getdata()
+
 }
 
-var filemenu = function (data) {
-  fillList("filemenu","getfileheaders",data)
-}
 
 
 var headermenu = function (data) {
@@ -64,37 +72,25 @@ var output = function (data) {
   console.log(data);
 }
 
-var getdata = function (year) {
-  var url = new URL("http://127.0.0.1:5432/getdata");
-  url.searchParams.append("year", year);
-  fetch(url)
-    // Handle success
-    .then((response) => response.json()) // convert to json
-    .then((json) => update(json)) //print data to console
-    .catch((err) => console.log("Request Failed", err)); // Catch errors
-};
 
 
-var getunique = function (header) {
-  var url = new URL("http://127.0.0.1:5432/getunique");
-  url.searchParams.append("header", header);
-  url.searchParams.append("fileChoice", fileChoice);
-  fetch(url)
-    // Handle success
-    .then((response) => response.json()) // convert to json
-    .then((json) => groupbymenu(json)) //print data to console
-    .catch((err) => console.log("Request Failed", err)); // Catch errors
-};
-
-
+/*
+First function called gets oll the files from tha data folder
+*/
 var getfiles = function () {
   var url = new URL("http://127.0.0.1:5432/getfiles");
   fetch(url)
     // Handle success
     .then((response) => response.json()) // convert to json
-    .then((json) => filemenu(json)) //print data to console
+    .then((json) => filemenu(json)) // Fills the file menu
     .catch((err) => console.log("Request Failed", err));
 
+}
+
+
+var filemenu = function (data) { // load the file menu with all the files 
+  fillList("filemenu","getfileheaders",data)  // will call getfileheadres when clicked
+  
 }
 
 var getfileheaders = function (file) {
@@ -108,6 +104,84 @@ var getfileheaders = function (file) {
     .then((json) => headermenu(json)) //print data to console
     .catch((err) => console.log("Request Failed", err));
 
+}
+
+var headermenu = function (data) {
+  document.getElementById("filelable").innerHTML="Files"
+  // fillList("headermenu","getunique",data)
+  fillSelect("xaxismenu","setXaxis",data)
+  fillSelect("yaxismenu","setYaxis",data)
+  getunique("time")
+}
+
+var getunique = function (header) {
+  var url = new URL("http://127.0.0.1:5432/getunique");
+  url.searchParams.append("header", header);
+  url.searchParams.append("fileChoice", fileChoice);
+  fetch(url)
+    // Handle success
+    .then((response) => response.json()) // convert to json
+    .then((json) => groupbymenu(json)) //print data to console
+    .catch((err) => console.log("Request Failed", err)); // Catch errors
+};
+
+
+var getSelectedData = function () {
+  var url = new URL("http://127.0.0.1:5432/getdata");
+  url.searchParams.append("year", time);
+  url.searchParams.append("x_axis", xAxis);
+  url.searchParams.append("y_axis", yAxis);
+  fetch(url)
+    // Handle success
+    .then((response) => response.json()) // convert to json
+    .then((json) => update(json)) //print data to console
+    .catch((err) => console.log("Request Failed", err)); // Catch errors
+};
+
+
+var getTestData = function () {
+  var url = new URL("http://127.0.0.1:5432/getdata");
+  time = 2015
+  xAxis = 'dag'
+  yAxis = 'potentialearnings'
+  url.searchParams.append("year", time);
+  url.searchParams.append("x_axis", xAxis);
+  url.searchParams.append("y_axis", yAxis);
+  fetch(url)
+    // Handle success
+    .then((response) => response.json()) // convert to json
+    .then((json) => update(json)) //print data to console
+    .catch((err) => console.log("Request Failed", err)); // Catch errors
+};
+
+var getPersonData = function () {
+  var url = new URL("http://127.0.0.1:5432/getpersondata");
+  console.log(personId);
+  url.searchParams.append("id_person", personId);
+  fetch(url)
+    // Handle success
+    .then((response) => response.json()) // convert to json
+    .then((json) => outdata(json)) //print data to console
+    .catch((err) => console.log("Request Failed", err)); // Catch errors
+};
+var outdata = function(data){
+  let body = ""
+  let head = "<tr>"
+  console.log(data);
+  for (let key in data[0]){
+    head += "<th>"+key+"</th>"
+  }
+  head+="</tr>" 
+  document.getElementById("pheader").innerHTML=head
+  for(let i=0 ;i< data.length;i++){
+    body+="<tr>"
+    for (let key in data[i]){
+      body += "<td>"+data[i][key]+"</td>"
+    }
+    body+="</tr>"
+  }
+  document.getElementById("pdata").innerHTML=body
+  
 }
 console.log("0.006");
 

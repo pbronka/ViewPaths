@@ -44,9 +44,19 @@ def getfileheaders():
 @app.route("/getdata", methods = ['GET'])
 def getdata():
   year = request.args.get('year')
+  x_axis = request.args.get('x_axis')
+  y_axis = request.args.get('y_axis')
   print(type(year),year)
   df_slect = df[df['time'] == int(year)]
-  return df_slect[['id_person','dag','potentialearnings']].to_json(orient='records')    
+  return df_slect[['id_person',x_axis,y_axis]].to_json(orient='records')    
+
+@app.route("/getpersondata", methods = ['GET'])
+def getpersondata():
+  id_person = request.args.get('id_person')
+  print(id_person)
+  df_slect = df[df['id_person'] == int(id_person)]
+  return df_slect.to_json(orient='records')  
+
 
 if __name__ == "__main__":
     port = 5432
