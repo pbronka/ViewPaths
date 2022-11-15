@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <body>
+    <h2>D3.js Scatter-Plot</h2>
+
+    <svg id="myPlot" style="width: 500px; height: 500px"></svg>
+
+    <script>
+      const numPoints = 100;
+      let data = [];
+      for (let i = 0; i < numPoints; i++) {
+        data.push([i, Math.random() * 500, Math.random() * 500]);
+      }
+      const xSize = 500;
+      const ySize = 500;
+      const margin = 40;
+
+      class Scatter {
+        constructor(xSize, ySize, margin, anchor) {
+          this.xSize = xSize;
+          this.ySize = ySize;
+          this.margin = margin;
+
+          // Append SVG Object to the Page
+          this.svg = d3
+            .select("#" + anchor)
+            .append("svg")
+            .append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+
+          const xMax = xSize - margin * 2;
+          const yMax = ySize - margin * 2;
+          this.xScale = d3.scaleLinear().domain([0, 500]).range([0, xMax]);
+
+          this.svg
+            .append("g")
+            .attr("transform", "translate(0," + yMax + ")")
+            .call(d3.axisBottom(this.xScale));
+          this.yScale = d3.scaleLinear().domain([0, 500]).range([yMax, 0]);
+          this.svg.append("g").call(d3.axisLeft(this.yScale));
+        }
+
+        draw(data) {
+          this.svg
+            .selectAll("dot")
+            .data(data, (d) => d[0])
+            .join(
+              (enter) =>
+                enter
+                  .append("circle")
+                  .attr("cx", function (d) {
+                    return d[1];
+                  })
+                  .attr("cy", function (d) {
+                    return d[2];
+                  })
+                  .attr("r", 3)
+                  .style("fill", "Red"),
+              (update) =>
+                update
+                  .attr("cx", function (d) {
+                    return d[1];
+                  })
+                  .attr("cy", function (d) {
+                    console.log(d[0]);
+                    return d[2];
+                  })
+                  .attr("r", 30)
+                  .style("fill", "blue")
+                  ,
+            (exit) => exit.remove()
+            );
+        }
+      }
+
+      const graph = new Scatter(xSize, ySize, margin, "myPlot");
+
+      graph.draw(data);
+      console.log(data[10]);
+      data = [];
+      for (let i = 0; i < numPoints; i++) {
+        data.push([i, Math.random() * 500, Math.random() * 500]);
+      }console.log(data[10]);
+      graph.draw(data);
+    </script>
+  </body>
+</html>
