@@ -1,89 +1,121 @@
 <!DOCTYPE html>
 <html>
-  <
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <body>
     <h2>D3.js Scatter-Plot</h2>
-
+    <ul id="list">
+      <li></li>
+    </ul>
+    <ul id="list2">
+      <li></li>
+    </ul>
+    <button id="adddata" type="button">Add data</button>
+    <button id="changedata" type="button">Change data</button>
+    <button id="newdata" type="button">New data</button>
+    <!-- <button id="removedata" type="button">Remove data</button> -->
     <svg id="myPlot" style="width: 500px; height: 500px"></svg>
 
     <script>
-      const numPoints = 100;
-      let data = [];
-      for (let i = 0; i < numPoints; i++) {
-        data.push([i, Math.random() * 500, Math.random() * 500]);
-      }
-      const xSize = 500;
-      const ySize = 500;
-      const margin = 40;
-
-      class Scatter {
-        constructor(xSize, ySize, margin, anchor) {
-          this.xSize = xSize;
-          this.ySize = ySize;
-          this.margin = margin;
-
-          // Append SVG Object to the Page
-          this.svg = d3
-            .select("#" + anchor)
-            .append("svg")
-            .append("g")
-            .attr("transform", "translate(" + margin + "," + margin + ")");
-
-          const xMax = xSize - margin * 2;
-          const yMax = ySize - margin * 2;
-          this.xScale = d3.scaleLinear().domain([0, 500]).range([0, xMax]);
-
-          this.svg
-            .append("g")
-            .attr("transform", "translate(0," + yMax + ")")
-            .call(d3.axisBottom(this.xScale));
-          this.yScale = d3.scaleLinear().domain([0, 500]).range([yMax, 0]);
-          this.svg.append("g").call(d3.axisLeft(this.yScale));
-        }
-
-        draw(data) {
-          this.svg
-            .selectAll("dot")
-            .data(data, (d) => d[0])
-            .join(
-              (enter) =>
-                enter
-                  .append("circle")
-                  .attr("cx", function (d) {
-                    return d[1];
-                  })
-                  .attr("cy", function (d) {
-                    return d[2];
-                  })
-                  .attr("r", 3)
-                  .style("fill", "Red"),
-              (update) =>
-                update
-                  .attr("cx", function (d) {
-                    return d[1];
-                  })
-                  .attr("cy", function (d) {
-                    console.log(d[0]);
-                    return d[2];
-                  })
-                  .attr("r", 30)
-                  .style("fill", "blue")
-                  ,
-            (exit) => exit.remove()
+      var data = [
+        [0, 10],
+        [1, 20],
+        [3, 30],
+        [4, 25],
+        [5, 15],
+      ];
+      var update = function (data) {
+        d3.select("#list")
+          .selectAll("li")
+          .data([
+        [{"index":0, "value":10}],
+        [{"index":1, "value":11}],
+        [{"index":2, "value":12}],
+        [{"index":3, "value":13}],
+        [{"index":4, "value":14}],
+      ],function(d){return d["index"]})
+          .text(function (d) {
+            return "This is pre-existing element and the value is " + d["value"];
+          })
+          .attr("style", "color: blue")
+          .enter()
+          .append("li")
+          .text(function (d) {
+            return (
+              "This is dynamically created element and the value is " + d["value"]
             );
+          })
+          .attr("style", "color: red");
+      };
+
+      var update2 = function (tdata) {
+        d3.select("#list2")
+          .selectAll("li")
+          .data(tdata)
+          .join(
+            function (enter) {
+              return enter
+                .append("li")
+                .text(function (d) {
+                  return (
+                    "This is dynamically created element and the value is " +
+                    d[1]
+                  );
+                })
+                .attr("style", "color: red");
+            },
+            function (update) {
+              return update.attr("style", "color: green").text(function (d) {
+            return "This is pre-existing element and the value is " + d[1];
+          })
+            },
+            function (exit) {
+              return exit.remove();
+            }
+          )
+      };
+
+      document.getElementById("adddata").onclick = function () {
+        console.log(data);
+        data.splice(4, 0, [2, 12]);
+        console.log(data);
+        update(data);
+        update2(data);
+      };
+
+      document.getElementById("changedata").onclick = function () {
+        console.log(data);
+        for (i in data) {
+          data[i][1] = Math.floor(Math.random() * 10);
         }
-      }
+        console.log(data);
+        update(data);
+        update2(data);
+      };
 
-      const graph = new Scatter(xSize, ySize, margin, "myPlot");
+      document.getElementById("newdata").onclick = function () {
+        console.log(data);
+        data = [
+          [0, 110],
+          [1, 120],
+          [3, 130],
+          [4, 125],
+          [5, 115],
+        ];
+        console.log(data);
+        update(data);
+        update2(data);
+      };
 
-      graph.draw(data);
-      console.log(data[10]);
-      data = [];
-      for (let i = 0; i < numPoints; i++) {
-        data.push([i, Math.random() * 500, Math.random() * 500]);
-      }console.log(data[10]);
-      graph.draw(data);
+      // document.getElementById("removedata").onclick = function () {
+      //   console.log(data);
+      //   data =  data.slice(2)
+      //   console.log(data);
+      //   update(data);
+      //   update2(data)
+      // };
+
+      update(data);
+      update2(data);
     </script>
   </body>
 </html>
