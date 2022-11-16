@@ -26,22 +26,16 @@
       var update = function (data) {
         d3.select("#list")
           .selectAll("li")
-          .data([
-        [{"index":0, "value":10}],
-        [{"index":1, "value":11}],
-        [{"index":2, "value":12}],
-        [{"index":3, "value":13}],
-        [{"index":4, "value":14}],
-      ],function(d){return d["index"]})
+          .data(data)
           .text(function (d) {
-            return "This is pre-existing element and the value is " + d["value"];
+            return "This is pre-existing element and the value is " + d[1];
           })
           .attr("style", "color: blue")
           .enter()
           .append("li")
           .text(function (d) {
             return (
-              "This is dynamically created element and the value is " + d["value"]
+              "This is dynamically created element and the value is " + d[1]
             );
           })
           .attr("style", "color: red");
