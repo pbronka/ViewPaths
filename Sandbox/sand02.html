@@ -4,16 +4,20 @@
   <body>
     <h2>D3.js Scatter-Plot</h2>
 
-    <svg id="myPlot" style="width: 200px; height: 200px"></svg>
+    <svg id="myPlot" style="width: 80%; height: 200px"></svg>
+    <br>
     <button id="newdata" type="button">New data</button>
     <button id="adddata" type="button">Add data</button>
     <script>
       // Set Dimensions
+      var element = document.getElementById("myPlot")
+      var bBox = element.getBoundingClientRect()
+     
       const xSize = 500;
       const ySize = 500;
       const margin = 40;
-      const xMax = 200 - margin * 2;
-      const yMax = 200 - margin * 2;
+      var xMax = bBox.width - margin * 2;
+      var yMax = bBox.height - margin * 2;
 
       // Create Random Points
       const numPoints = 100;
@@ -61,12 +65,11 @@
             console.log(this.__data__.id);
             d3.select(this)
               .attr("cursor", "pointer")
-              .attr("r", 6)
               .style("fill", "green");
           })
           .on("mouseout", function (d) {
             d3.select(this)
-              .attr("r", this.toggle ? 9 : 6)
+              .attr("r", this.toggle ? 9 : 3)
               .style("fill", this.toggle ? "green" : "red");
           })
           .on("click", function (d) {
@@ -74,7 +77,7 @@
             d3.select(this)
               .transition()
               .duration(1000)
-              .attr("r", this.toggle ? 9 : 6)
+              .attr("r", this.toggle ? 9 : 3)
               .style("fill", this.toggle ? "green" : "red");
           })
           .attr("cx", function (d) {
@@ -83,7 +86,7 @@
           .attr("cy", function (d) {
             return y(d["ypos"]);
           })
-          .attr("r", 6)
+          .attr("r", 3)
           .style("fill", "Red");
 
           
