@@ -4,7 +4,7 @@
   <body>
     <h2>D3.js Scatter-Plot</h2>
 
-    <svg id="myPlot" style="width: 500px; height: 500px"></svg>
+    <svg id="myPlot" style="width: 200px; height: 200px"></svg>
     <button id="newdata" type="button">New data</button>
     <button id="adddata" type="button">Add data</button>
     <script>
@@ -12,8 +12,8 @@
       const xSize = 500;
       const ySize = 500;
       const margin = 40;
-      const xMax = xSize - margin * 2;
-      const yMax = ySize - margin * 2;
+      const xMax = 200 - margin * 2;
+      const yMax = 200 - margin * 2;
 
       // Create Random Points
       const numPoints = 100;
@@ -21,8 +21,8 @@
       for (let i = 0; i < numPoints; i++) {
         data.push({
           id: i,
-          xpos: Math.random() * xMax,
-          ypos: Math.random() * yMax,
+          xpos: Math.random() * xSize,
+          ypos: Math.random() * ySize,
         });
       }
 
@@ -35,7 +35,7 @@
 
       // X Axis
       var update = function (svg, data) {
-        const x = d3.scaleLinear().domain([0, 500]).range([0, xMax]);
+        const x = d3.scaleLinear().domain([0, xSize]).range([0, xMax]);
 
         svg
           .append("g")
@@ -43,7 +43,7 @@
           .call(d3.axisBottom(x));
 
         // Y Axis
-        const y = d3.scaleLinear().domain([0, 500]).range([yMax, 0]);
+        const y = d3.scaleLinear().domain([0, ySize]).range([yMax, 0]);
 
         svg.append("g").call(d3.axisLeft(y));
 
@@ -100,8 +100,8 @@
 
       document.getElementById("newdata").onclick = function () {
         for (let i = 0; i < numPoints; i++) {
-          data[i]["xpos"] = Math.random() * xMax;
-          data[i]["ypos"] = Math.random() * yMax;
+          data[i]["xpos"] = Math.random() * xSize;
+          data[i]["ypos"] = Math.random() * ySize;
         }
         update(svg,data);
       };
@@ -109,8 +109,8 @@
       document.getElementById("adddata").onclick = function () {
         data.push({
           id: 200,
-          xpos: Math.random() * xMax,
-          ypos: Math.random() * yMax,
+          xpos: Math.random() * xSize,
+          ypos: Math.random() * ySize,
         });
         update(svg,data);
       };
