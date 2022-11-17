@@ -24,14 +24,14 @@
         [5, 15],
       ];
       var update = function (data) {
-        d3.select("#list")
+        var lists = d3.select("#list")
           .selectAll("li")
-          .data(data)
-          .text(function (d) {
-            return "This is pre-existing element and the value is " + d[1];
-          })
-          .attr("style", "color: blue")
-          .enter()
+          .data(data);
+
+
+          
+          
+          lists.enter()
           .append("li")
           .text(function (d) {
             return (
@@ -39,6 +39,14 @@
             );
           })
           .attr("style", "color: red");
+
+
+          lists.text(function (d) {
+            return "This is pre-existing element and the value is " + d[1];
+          })
+          .attr("style", "color: blue")
+
+          lists.exit().remove()
       };
 
       var update2 = function (tdata) {

@@ -1,43 +1,119 @@
 <!DOCTYPE html>
 <html>
-  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/d3.v4.js"></script>
   <body>
+    <h2>D3.js Scatter-Plot</h2>
+
+    <svg id="myPlot" style="width: 500px; height: 500px"></svg>
+    <button id="newdata" type="button">New data</button>
+    <button id="adddata" type="button">Add data</button>
     <script>
-    var scale = d3.scale.linear()
-      .domain([1, 5])   // Data space
-      .range([0, 200]); // Pixel space
+      // Set Dimensions
+      const xSize = 500;
+      const ySize = 500;
+      const margin = 40;
+      const xMax = xSize - margin * 2;
+      const yMax = ySize - margin * 2;
 
-    var svg = d3.select("body").append("svg")
-      .attr("width", 250)
-      .attr("height", 250);
+      // Create Random Points
+      const numPoints = 100;
+      const data = [];
+      for (let i = 0; i < numPoints; i++) {
+        data.push({
+          id: i,
+          xpos: Math.random() * xMax,
+          ypos: Math.random() * yMax,
+        });
+      }
 
-    function render(data, color) {
+      // Append SVG Object to the Page
+      const svg = d3
+        .select("#myPlot")
+        .append("svg")
+        .append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")");
 
-        var rects = svg.selectAll("rect").data(data);
+      // X Axis
+      var update = function (svg, data) {
+        const x = d3.scaleLinear().domain([0, 500]).range([0, xMax]);
 
-        // Enter
-        rects.enter().append("rect")
-          .attr("y", 50)
-          .attr("width", 20)
-          .attr("height", 20);
+        svg
+          .append("g")
+          .attr("transform", "translate(0," + yMax + ")")
+          .call(d3.axisBottom(x));
 
-        // Update
-        rects
-          .attr("x", scale)
-          .attr("fill", color);
+        // Y Axis
+        const y = d3.scaleLinear().domain([0, 500]).range([yMax, 0]);
 
-        // Exit
-        rects.exit().remove();
+        svg.append("g").call(d3.axisLeft(y));
 
-    }
+        // Dots
+        var dots = svg
+          .selectAll("circle")
+          .data(data, function (d) {
+             return d["id"];
+          });
 
-    setTimeout(function () { render([1, 2, 2.5], "red"); }, 1000);
-    setTimeout(function () { render([1, 2, 3, 4, 5], "blue"); }, 2000);
-    setTimeout(function () { render([1, 2], "green"); }, 3000);
-    setTimeout(function () { render([3, 4, 5], "cyan"); }, 4000);
-    setTimeout(function () { render([4, 5], "magenta"); }, 5000);
+        dots
+          .enter()
+          .append("circle")
+          .on("mouseover", function (d) {
+            console.log(this.__data__.id);
+            d3.select(this)
+              .attr("cursor", "pointer")
+              .attr("r", 6)
+              .style("fill", "green");
+          })
+          .on("mouseout", function (d) {
+            d3.select(this)
+              .attr("r", this.toggle ? 9 : 6)
+              .style("fill", this.toggle ? "green" : "red");
+          })
+          .on("click", function (d) {
+            this.toggle = !this.toggle; // declared variable setting it to true
+            d3.select(this)
+              .transition()
+              .duration(1000)
+              .attr("r", this.toggle ? 9 : 6)
+              .style("fill", this.toggle ? "green" : "red");
+          })
+          .attr("cx", function (d) {
+            return x(d["xpos"]);
+          })
+          .attr("cy", function (d) {
+            return y(d["ypos"]);
+          })
+          .attr("r", 6)
+          .style("fill", "Red");
 
+          
+          dots.attr("cx", function (d) {
+            return x(d["xpos"]);
+          })
+          .attr("cy", function (d) {
+            return y(d["ypos"]);
+          })
+          dots.exit().remove()
+      };
+
+      update(svg, data);
+
+      document.getElementById("newdata").onclick = function () {
+        for (let i = 0; i < numPoints; i++) {
+          data[i]["xpos"] = Math.random() * xMax;
+          data[i]["ypos"] = Math.random() * yMax;
+        }
+        update(svg,data);
+      };
+
+      document.getElementById("adddata").onclick = function () {
+        data.push({
+          id: 200,
+          xpos: Math.random() * xMax,
+          ypos: Math.random() * yMax,
+        });
+        update(svg,data);
+      };
     </script>
-
   </body>
 </html>
