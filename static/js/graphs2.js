@@ -22,9 +22,9 @@ var update = function (data) {
         return d[xAxis]
     })
     const x = d3.scaleLinear().domain([0, topx]).range([0, xMax]);
-
-    svg
-        .append("g")
+    svg.selectAll("#xaxis").remove()
+    svg.append("g")
+        .attr("id","xaxis")
         .attr("transform", "translate(0," + yMax + ")")
         .call(d3.axisBottom(x));
 
@@ -33,9 +33,8 @@ var update = function (data) {
         return d[yAxis]
     })
     const y = d3.scaleLinear().domain([0, topy]).range([yMax, 0]);
-
-    svg.select("#yaxix").enter().append("g").attr("id","yaxis").call(d3.axisLeft(y));
-
+    svg.selectAll("#yaxis").remove()
+    svg.append("g").attr("id","yaxis").call(d3.axisLeft(y));
     // Dots
     var dots = svg
         .selectAll("circle")
