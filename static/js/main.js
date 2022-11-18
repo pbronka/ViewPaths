@@ -183,6 +183,6 @@ var outdata = function(data){
   document.getElementById("pdata").innerHTML=body
   
 }
-console.log("0.006");
+console.log("0.007");
 
 getfiles()

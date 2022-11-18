@@ -39,7 +39,10 @@
 
       // X Axis
       var update = function (svg, data) {
-        const x = d3.scaleLinear().domain([0, xSize]).range([0, xMax]);
+        topx = d3.max(data,function(d){
+          return d["xpos"]
+        })
+        const x = d3.scaleLinear().domain([0, topx]).range([0, xMax]);
 
         svg
           .append("g")
@@ -47,7 +50,10 @@
           .call(d3.axisBottom(x));
 
         // Y Axis
-        const y = d3.scaleLinear().domain([0, ySize]).range([yMax, 0]);
+        topy = d3.max(data,function(d){
+          return d["ypos"]
+        })
+        const y = d3.scaleLinear().domain([0, topy]).range([yMax, 0]);
 
         svg.append("g").call(d3.axisLeft(y));
 
