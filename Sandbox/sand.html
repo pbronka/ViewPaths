@@ -1,123 +1,126 @@
 <!DOCTYPE html>
 <html>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/d3.v4.js"></script>
   <body>
     <h2>D3.js Scatter-Plot</h2>
-    <ul id="list">
-      <li></li>
-    </ul>
-    <ul id="list2">
-      <li></li>
-    </ul>
-    <button id="adddata" type="button">Add data</button>
-    <button id="changedata" type="button">Change data</button>
-    <button id="newdata" type="button">New data</button>
-    <!-- <button id="removedata" type="button">Remove data</button> -->
-    <svg id="myPlot" style="width: 500px; height: 500px"></svg>
 
+    <div id="dataviz_axisZoom"></div>
+    <br>
+    
     <script>
-      var data = [
-        [0, 10],
-        [1, 20],
-        [3, 30],
-        [4, 25],
-        [5, 15],
-      ];
-      var update = function (data) {
-        var lists = d3.select("#list")
-          .selectAll("li")
-          .data(data);
 
+  // set the dimensions and margins of the graph
+  var margin = {top: 10, right: 30, bottom: 30, left: 60},
+      width = 460 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
+  
+  // append the SVG object to the body of the page
+  var SVG = d3.select("#dataviz_axisZoom")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+  
+            const xSize = 500;
+      const ySize = 500;
+            const numPoints = 100;
+      const data = [];
+      for (let i = 0; i < numPoints; i++) {
+        data.push({
+          id: i,
+          xpos: Math.random() * xSize,
+          ypos: Math.random() * ySize,
+        });
+      }          
+  //Read the data
+  var topx = d3.max(data,function(d){
+          return d["xpos"]
+        })
 
-          
-          
-          lists.enter()
-          .append("li")
-          .text(function (d) {
-            return (
-              "This is dynamically created element and the value is " + d[1]
-            );
+      var  topy = d3.max(data,function(d){
+          return d["ypos"]
+        })
+    // Add X axis
+    var x = d3.scaleLinear()
+      .domain([0, topx])
+      .range([ 0, width ]);
+    var xAxis = SVG.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+  
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, topy])
+      .range([ height, 0]);
+    var yAxis = SVG.append("g")
+      .call(d3.axisLeft(y));
+  
+    // Add a clipPath: everything out of this area won't be drawn.
+    var clip = SVG.append("defs").append("SVG:clipPath")
+        .attr("id", "clip")
+        .append("SVG:rect")
+        .attr("width", width )
+        .attr("height", height )
+        .attr("x", 0)
+        .attr("y", 0);
+  
+    // Create the scatter variable: where both the circles and the brush take place
+    var scatter = SVG.append('g')
+      .attr("clip-path", "url(#clip)")
+  
+    // Add circles
+    scatter
+      .selectAll("circle")
+      .data(data, function (d) {
+             return d["id"];
           })
-          .attr("style", "color: red");
+      .enter()
+      .append("circle")
+        .attr("cx", function (d) { return x(d["xpos"]); } )
+        .attr("cy", function (d) { return y(d["ypos"]); } )
+        .attr("r", 8)
+        .style("fill", "#61a3a9")
+        .style("opacity", 0.5)
+  
+    // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+    var zoom = d3.zoom()
+        .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+        .extent([[0, 0], [width, height]])
+        .on("zoom", updateChart);
+  
+    // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+    SVG.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .call(zoom);
+    // now the user can zoom and it will trigger the function called updateChart
+  
+    // A function that updates the chart when the user zoom and thus new boundaries are available
+    function updateChart() {
+  
+      // recover the new scale
+      var newX = d3.event.transform.rescaleX(x);
+      var newY = d3.event.transform.rescaleY(y);
+  
+      // update axes with these new boundaries
+      xAxis.call(d3.axisBottom(newX))
+      yAxis.call(d3.axisLeft(newY))
+  
+      // update circle position
+      scatter
+        .selectAll("circle")
+        .attr('cx', function(d) {return newX(d["xpos"])})
+        .attr('cy', function(d) {return newY(d["ypos"])});
+    }
+  
 
-
-          lists.text(function (d) {
-            return "This is pre-existing element and the value is " + d[1];
-          })
-          .attr("style", "color: blue")
-
-          lists.exit().remove()
-      };
-
-      var update2 = function (tdata) {
-        d3.select("#list2")
-          .selectAll("li")
-          .data(tdata)
-          .join(
-            function (enter) {
-              return enter
-                .append("li")
-                .text(function (d) {
-                  return (
-                    "This is dynamically created element and the value is " +
-                    d[1]
-                  );
-                })
-                .attr("style", "color: red");
-            },
-            function (update) {
-              return update.attr("style", "color: green").text(function (d) {
-            return "This is pre-existing element and the value is " + d[1];
-          })
-            },
-            function (exit) {
-              return exit.remove();
-            }
-          )
-      };
-
-      document.getElementById("adddata").onclick = function () {
-        console.log(data);
-        data.splice(4, 0, [2, 12]);
-        console.log(data);
-        update(data);
-        update2(data);
-      };
-
-      document.getElementById("changedata").onclick = function () {
-        console.log(data);
-        for (i in data) {
-          data[i][1] = Math.floor(Math.random() * 10);
-        }
-        console.log(data);
-        update(data);
-        update2(data);
-      };
-
-      document.getElementById("newdata").onclick = function () {
-        console.log(data);
-        data = [
-          [0, 110],
-          [1, 120],
-          [3, 130],
-          [4, 125],
-          [5, 115],
-        ];
-        console.log(data);
-        update(data);
-        update2(data);
-      };
-
-      // document.getElementById("removedata").onclick = function () {
-      //   console.log(data);
-      //   data =  data.slice(2)
-      //   console.log(data);
-      //   update(data);
-      //   update2(data)
-      // };
-
-      update(data);
-      update2(data);
-    </script>
+        
+  </script>
   </body>
-</html>
+  </html>
+  
