@@ -21,18 +21,18 @@ var update = function (data) {
     topx = d3.max(data, function (d) {
         return d[xAxis]
     })
-    const x = d3.scaleLinear().domain([0, topx]).range([0, xMax]);
+    const x = d3.scaleLinear().domain([0, topx]).range([0, width]);
     svg.selectAll("#xaxis").remove()
     svg.append("g")
         .attr("id","xaxis")
-        .attr("transform", "translate(0," + yMax + ")")
+        .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
     // Y Axis
     topy = d3.max(data, function (d) {
         return d[yAxis]
     })
-    const y = d3.scaleLinear().domain([0, topy]).range([yMax, 0]);
+    const y = d3.scaleLinear().domain([0, topy]).range([height, 0]);
     svg.selectAll("#yaxis").remove()
     svg.append("g").attr("id","yaxis").call(d3.axisLeft(y));
     // Dots
@@ -105,8 +105,8 @@ var element = document.getElementById("plot")
 var bBox = element.getBoundingClientRect()
 
 const margin = 40;
-var xMax = bBox.width - margin * 2;
-var yMax = bBox.height - margin * 2;
+var width = bBox.width - margin * 2;
+var height = bBox.height - margin * 2;
 
 // Create Random Points
 
@@ -118,3 +118,4 @@ const svg = d3
     .append("g")
     .attr("transform", "translate(" + margin + "," + margin + ")");
 
+    

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h5>V7</h5>
+    <div id="dataviz_basicZoom"></div>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+      data = [
+        [2, 2],
+        [8, 1],
+      ];
+      class dotty {
+        constructor(tag) {
+          // append the svg object to the body of the page
+          this.svg = d3
+            .select(tag)
+            .append("svg")
+            .attr("width", 400)
+            .attr("height", 400)
+            .call(
+              d3.zoom().on("zoom", function (e) {
+                svg.attr("transform", e.transform);
+              })
+            )
+            .append("g");
+        };
+        
+        xScale(){
+          return d3.scaleLinear().domain([0, 10]).range([0, 400])
+        }
+        yScale(){
+          return d3.scaleLinear().domain([0, 10]).range([400,0])
+        }
+        
+        update(data) {
+          var circles = this.svg.selectAll("g circle").data(data);
+          var yScale = this.yScale()
+          var xScale = this.xScale()
+          
+          circles
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) {
+              return xScale(d[0]);
+            })
+            .attr("cy", function(d){ yScale(d[1])})
+            .attr("r", 40)
+            .attr("fill", "red");
+
+          circles
+            .attr("cx", function (d) {
+              return d[0];
+            })
+            .attr("cx", function (d) {
+              return xScale(d[0]);
+            })
+            .attr("cy", function (d) {
+              return yScale(d[1]);
+            })
+            .attr("fill", "green");
+        };
+      }
+      test = new dotty("#dataviz_basicZoom");
+      test.update(data);
+      data.push([7, 4]);
+      test.update(data);
+    </script>
+  </body>
+</html>

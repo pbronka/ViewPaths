@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://d3js.org/d3.v7.js"></script>
   <body>
     <h2>D3.js Scatter-Plot</h2>
 
@@ -34,15 +34,15 @@
       const svg = d3
         .select("#myPlot")
         .append("svg")
+        .call(d3.zoom().on("zoom", function (e) {
+           svg.attr("transform", e.transform)
+        }))
         .append("g")
         .attr("transform", "translate(" + margin + "," + margin + ")");
 
       // X Axis
       var update = function (svg, data) {
-        topx = d3.max(data,function(d){
-          return d["xpos"]
-        })
-        const x = d3.scaleLinear().domain([0, topx]).range([0, xMax]);
+        const x = d3.scaleLinear().domain([0, xSize]).range([0, xMax]);
 
         svg
           .append("g")
@@ -50,10 +50,7 @@
           .call(d3.axisBottom(x));
 
         // Y Axis
-        topy = d3.max(data,function(d){
-          return d["ypos"]
-        })
-        const y = d3.scaleLinear().domain([0, topy]).range([yMax, 0]);
+        const y = d3.scaleLinear().domain([0, ySize]).range([yMax, 0]);
 
         svg.append("g").call(d3.axisLeft(y));
 
