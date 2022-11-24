@@ -6,9 +6,7 @@ var personId = ""
 
 var personIdData={}
 
-// var update = function(data){
-//   console.log(data);
-// }
+
 
 var getdata = function(){
   if((time!='')&&(xAxis!="")&&(yAxis!="")){
@@ -134,7 +132,7 @@ var getSelectedData = function () {
   fetch(url)
     // Handle success
     .then((response) => response.json()) // convert to json
-    .then((json) => update(json)) //print data to console
+    .then((json) => scatter.draw(json,xAxis,yAxis)) //print data to console
     .catch((err) => console.log("Request Failed", err)); // Catch errors
 };
 
@@ -150,7 +148,7 @@ var getTestData = function () {
   fetch(url)
     // Handle success
     .then((response) => response.json()) // convert to json
-    .then((json) => update(json)) //print data to console
+    .then((json) => scatter.draw(json,xAxis,yAxis)) //print data to console
     .catch((err) => console.log("Request Failed", err)); // Catch errors
 };
 
@@ -183,6 +181,6 @@ var outdata = function(data){
   document.getElementById("pdata").innerHTML=body
   
 }
-console.log("0.007");
-
+console.log("main 0.0009");
+let scatter = new Scatter("plot")
 getfiles()
