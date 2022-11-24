@@ -4,11 +4,11 @@ class Scatter {
       var element = document.getElementById(tag)
       var bBox = element.getBoundingClientRect()
 
-      const margin = 20;
-      this.width = bBox.width - margin * 4;;
-      this.height = bBox.height - margin * 2;;
-      const padding = { top: 10, bottom: 50, left: 40, right: 20 };
-
+      const margin = 80;
+      this.width = bBox.width - margin ;
+      this.height = bBox.height - margin ;
+      const padding = { top: 10, bottom: 40, left: 60, right: 20 };
+console.log( this.height);
       this.svg = d3
         .select("#"+tag)
         .attr("width", this.width + padding.right + padding.left)
@@ -34,13 +34,19 @@ class Scatter {
         .attr("id", "xAxis")
         .attr("transform", "translate(" + [0, this.height] + ")");
       this.yAxis = this.plotArea.append("g").attr("id", "yAxis")
-      this.yAxis.append("text")
-      .attr("class", "axis-title")
+      this.yAxisLable= this.svg.append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .attr("fill", "#5D6971")
+      .attr("y", 0 )
+      .attr("x",0 - (this.height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle");
+
+      this.xAxisLable= this.svg.append("text")
+      .attr("y",this.height+padding.bottom)
+      .attr("x",this.width/2 + padding.left)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle");
+     
     }
 
     draw(data,xElement,yElement) {
@@ -67,9 +73,10 @@ class Scatter {
       self.xAxis.call(xAxis);
 
       const yAxis = d3.axisLeft(y);
-      self.yAxis
-      .text('Y Axis Label')
       self.yAxis.call(yAxis);
+
+      self.yAxisLable.text(yElement)
+      self.xAxisLable.text(xElement)
 
       const dots = self.plotArea
       .selectAll("circle")
