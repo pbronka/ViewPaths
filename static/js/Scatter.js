@@ -85,7 +85,7 @@ class Scatter {
         .attr("cy", function (d) {
           return y(d[yElement]);
         })
-        .attr("r", 3)
+        .attr("r", 2)
         .style("fill", "Red")
         .on("mouseover", function (d) {
           //console.log(this.__data__);
@@ -96,7 +96,7 @@ class Scatter {
         })
         .on("mouseout", function (d) {
           d3.select(this)
-            .attr("r", this.toggle ? 9 : 3)
+            .attr("r", this.toggle ? 9 : 2)
             .style("fill", this.toggle ? "green" : "red");
         })
         .on("click", function (d) {
@@ -104,7 +104,7 @@ class Scatter {
           d3.select(this)
               .transition()
               .duration(1000)
-              .attr("r", this.toggle ? 9 : 3)
+              .attr("r", this.toggle ? 9 : 2)
               .style("fill", this.toggle ? "green" : "red");
           if (this.toggle) {
               personId = this.__data__.id_person
