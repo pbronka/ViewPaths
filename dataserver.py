@@ -61,5 +61,6 @@ def getpersondata():
 if __name__ == "__main__":
     port = 5432
     url = "http://127.0.0.1:{0}".format(port)
+    # time lag for serve to start before webpage called
     threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
     app.run(port=port, debug=False)
