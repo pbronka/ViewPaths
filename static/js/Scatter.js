@@ -148,7 +148,7 @@ console.log( this.height);
           });
       };
 
-      const zoom = d3.zoom().on("zoom", function (event) {
+      const zoom = d3.zoom().scaleExtent([1, 5]).on("zoom", function (event) {
         update(event);
       });
       this.svg.call(zoom);

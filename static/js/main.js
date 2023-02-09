@@ -182,5 +182,5 @@ var outdata = function(data){
   
 }
 console.log("main 0.0009");
-let scatter = new Scatter("plot")
+let scatter = new ScatterPlot("plot")
 getfiles()
