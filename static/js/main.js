@@ -5,7 +5,7 @@ var yAxis = "potentialearnings"
 var personId = ""
 
 var personIdData={}
-
+var currentDataSet=null
 
 
 var getdata = function(){
@@ -162,24 +162,42 @@ var getPersonData = function () {
     .then((json) => outdata(json)) //print data to console
     .catch((err) => console.log("Request Failed", err)); // Catch errors
 };
+
 var outdata = function(data){
+  currentDataSet = data
   let body = ""
   let head = "<tr>"
-  console.log(data);
+  //console.log(data);
+  let c = 0
   for (let key in data[0]){
-    head += "<th>"+key+"</th>"
+    strfun = 'plotchoice("'+key+'")'
+    head += '<th style = "color: green; cursor: pointer;" id = "header'+key+'" onclick='+strfun+'>'+key+"</th>"
+    c++;
   }
   head+="</tr>" 
   document.getElementById("pheader").innerHTML=head
   for(let i=0 ;i< data.length;i++){
     body+="<tr>"
     for (let key in data[i]){
-      body += "<td>"+data[i][key]+"</td>"
+      body += '<td  >'+data[i][key]+"</td>"
     }
     body+="</tr>"
   }
   document.getElementById("pdata").innerHTML=body
   
+}
+
+var plotchoice = function(key){
+
+  document.getElementById("header"+key).style.color = "red"
+  let data =[]
+  for(let i=0 ;i< currentDataSet.length;i++){
+     console.log(currentDataSet[i][key]);
+     data.push({"date":currentDataSet[i].time,"value":currentDataSet[i][key]})
+  }
+  console.log(data);
+  let line = new LinePlot("lineplot")
+  line.draw(data)
 }
 console.log("main 0.0009");
 let scatter = new ScatterPlot("plot")

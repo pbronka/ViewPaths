@@ -1,4 +1,4 @@
-
+console.log("scatter");
 class ScatterPlot {
     constructor(tag) {
         var element = document.getElementById(tag)
@@ -6,13 +6,13 @@ class ScatterPlot {
       let height = bBox.height
       let width = bBox.width
       tag = "#"+tag
-      console.log(width,height);
+      // console.log(width,height);
         this.margin = { top: 20, right: 20, bottom: 30, left: 40 },
             this.width = width - this.margin.left - this.margin.right,
             this.height = height - this.margin.top - this.margin.bottom;
 
-            console.log(this.width,this.margin.left,this.margin.right);
-            console.log(this.height,this.margin.top,this.margin.bottom);
+            // console.log(this.width,this.margin.left,this.margin.right);
+            // console.log(this.height,this.margin.top,this.margin.bottom);
       // set the ranges
 
 
