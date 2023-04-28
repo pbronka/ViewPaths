@@ -193,7 +193,7 @@ var outdata = function(data){
     console.log(idcol);
     body+='<tr style="background-color:'+idcol[id.toString()]+'">'
     for (let key in currentDataSet[i]){
-      body += '<td  >'+currentDataSet[i][key]+"</td>"
+      body += '<td style="color:#ffffff" >'+currentDataSet[i][key]+"</td>"
     }
     body+="</tr>"
   }
