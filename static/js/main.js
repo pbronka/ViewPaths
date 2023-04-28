@@ -193,11 +193,11 @@ var plotchoice = function(key){
   let data =[]
   for(let i=0 ;i< currentDataSet.length;i++){
      console.log(currentDataSet[i][key]);
-     data.push({"date":currentDataSet[i].time,"value":currentDataSet[i][key]})
+     data.push({id:"1",date:currentDataSet[i].time,"value":currentDataSet[i][key]})
   }
   console.log(data);
-  let line = new LinePlot("lineplot")
-  line.draw(data)
+  let line = new LinePlot("lineplot","Year",key)
+  line.update(data,"id")
 }
 console.log("main 0.0009");
 let scatter = new ScatterPlot("plot")

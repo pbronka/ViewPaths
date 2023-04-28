@@ -1,56 +1,120 @@
 console.log("Lineplot");
-class LinePlot{
-    constructor(tag) {
-        var element = document.getElementById(tag)
-      var bBox = element.getBoundingClientRect()
-      let height = bBox.height
-      let width = bBox.width
-      tag = "#"+tag
-      console.log(width,height);
-        this.margin = { top: 20, right: 20, bottom: 30, left: 40 },
-            this.width = width - this.margin.left - this.margin.right,
-            this.height = height - this.margin.top - this.margin.bottom;
+class LinePlot {
+  constructor(tag, xLabel, yLable) {
+    console.log(tag);
+    var element = document.getElementById(tag);
+    var bBox = element.getBoundingClientRect();
+    let height = bBox.height;
+    let width = bBox.width;
+    tag = "#" + tag;
+    console.log(width, height);
+    (this.margin = { top: 20, right: 20, bottom: 60, left: 100 }),
+      (this.width = width - this.margin.left - this.margin.right),
+      (this.height = height - this.margin.top - this.margin.bottom);
 
-            console.log(this.width,this.margin.left,this.margin.right);
-            console.log(this.height,this.margin.top,this.margin.bottom);
-      // set the ranges
-      this.svg = d3.select(tag).append("svg")
-      this.plotArea = this.svg.append("g")
-          
-      this.svg
-          .attr("width", this.width + this.margin.left + this.margin.right)
-          .attr("height", this.height + this.margin.top + this.margin.bottom)
-          .attr("style", "outline: thin solid black;");
+    console.log(this.width, this.margin.left, this.margin.right);
+    console.log(this.height, this.margin.top, this.margin.bottom);
+    // set the ranges
 
-    
-      this.plotArea.attr(
-          "transform",
-          "translate(" + [this.margin.left, this.margin.top] + ")"
-        );
+    // append the svg object to the body of the page
+    // append a 'group' element to 'svg'
+    // moves the 'group' element to the top left margin
+    this.svg = d3
+      .select(tag)
+      .append("svg")
+      .attr("width", this.width + this.margin.left + this.margin.right)
+      .attr("height", this.height + this.margin.top + this.margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
 
-      this.xAxis = this.svg.append("g")
-      this.xAxis.attr(
-          "transform",
-          "translate(" + this.margin.left + "," + (this.height + this.margin.top) + ")"
-        )
-      
-      this.yAxis = this.svg.append("g")
-      this.yAxis.attr(
-          "transform", 
-          "translate(" + this.margin.left + "," + this.margin.top + ")"
-          )
-    }
+    // Initialise a X axis:
+    this.x = d3.scaleLinear().range([0, this.width]);
+    this.xAxis = d3.axisBottom().scale(this.x);
+    this.svg
+      .append("g")
+      .attr("transform", `translate(0, ${this.height})`)
+      .attr("class", "myXaxis");
 
-    draw(data){
-        var chart = this.plotArea
-       chart.append("path")
-      .datum(data)
+    // Initialize an Y axis
+    this.y = d3.scaleLinear().range([this.height, 0]);
+    this.yAxis = d3.axisLeft().scale(this.y);
+    this.svg.append("g").attr("class", "myYaxis");
+
+    // X axis label:
+    this.svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("x", this.width / 2 + this.margin.left - xLabel.length * 4)
+      .attr("y", this.height + this.margin.top + 20)
+      .text(xLabel);
+
+    // Y axis label:
+    let lab = "Petal Length";
+    this.svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -this.margin.left + 20)
+      .attr("x", -this.margin.top - this.height / 2 )//+ yLable.length * 8)
+      .text(yLable); // Create a function that takes a dataset as input and update the plot:
+  }
+  update(data, groupby) {
+    const sumstat = d3.group(data, (d) => d[groupby]);
+    let self = this;
+    // Create the X axis:
+    this.x.domain([
+      d3.min(data, function (d) {
+        return d.date;
+      }),
+      d3.max(data, function (d) {
+        return d.date;
+      }),
+    ]);
+    this.svg.selectAll(".myXaxis").call(this.xAxis);
+
+    // create the Y axis
+    this.y.domain([
+      0,
+      d3.max(data, function (d) {
+        return d.value;
+      }),
+    ]);
+    this.svg.selectAll(".myYaxis").call(this.yAxis);
+
+    // Create a update selection: bind to the new data
+    const chart = this.svg.selectAll(".lineTest").data(sumstat); //,function(d){return d["idx"]});
+    const color = d3
+      .scaleOrdinal()
+      .range([
+        "#e41a1c",
+        "#377eb8",
+        "#4daf4a",
+        "#984ea3",
+        "#ff7f00",
+        "#ffff33",
+        "#a65628",
+        "#f781bf",
+        "#999999",
+      ]);
+    // Updata the line
+    chart
+      .enter()
+      .append("path")
+      .attr("class", "lineTest")
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.line()
-        .x(function(d) { return x(d.date) })
-        .y(function(d) { return y(d.value) })
-        )
-    }
+      .attr("stroke", function (d) {
+        return color(d[0]);
+      })
+      .attr("stroke-width", 2.5)
+      .attr("d", function (d) {
+        return d3
+          .line()
+          .x(function (d) {
+            return self.x(d.date);
+          })
+          .y(function (d) {
+            return self.y(d.value);
+          })(d[1]);
+      });
+  }
 }
