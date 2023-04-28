@@ -1,7 +1,20 @@
 console.log("scatter");
 class ScatterPlot {
     constructor(tag) {
-        var element = document.getElementById(tag)
+      this.colors=[
+        "#e41a1c",
+        "#377eb8",
+        "#4daf4a",
+        "#984ea3",
+        "#ff7f00",
+        "#ffff33",
+        "#a65628",
+        "#f781bf",
+        "#999999",
+      ]
+      console.log(this.colors);
+      this.colorCount = 0
+      var element = document.getElementById(tag)
       var bBox = element.getBoundingClientRect()
       let height = bBox.height
       let width = bBox.width
@@ -73,7 +86,7 @@ class ScatterPlot {
           ])
 
     }
-    draw(data, xaxis, yaxis, color="red" ,index="") {
+    draw(data, xaxis, yaxis, color="grey" ,index="") {
         self = this
         var update = function(){
             self.xAxis.transition().duration(1000).call(d3.axisBottom(x))          
@@ -143,7 +156,7 @@ class ScatterPlot {
             .attr("r", 1)
             .style("fill", color)
             .on("click", function (d) {
-                this.toggle = !this.toggle; // declared variable setting it to true
+                this.toggle = !this.toggle; // declagrey variable setting it to true
                 d3.select(this)
                     .transition()
                     .duration(1000)
@@ -155,22 +168,24 @@ class ScatterPlot {
             .on("mouseover", function (d) {
                 d3.select(this)
                     .attr("cursor", "pointer")
-                    .style("fill", "green")
+                    .style("fill",  self.colors[self.colorCount])
                     .attr("r", 6)
     
             })
             .on("mouseout", function (d) {
                 d3.select(this)
                     .attr("r", this.toggle ? 9 : 2)
-                    .style("fill", this.toggle ? "green" : "red");
+                    .style("fill", this.toggle ?  this.color : "grey");
             })
             .on("click", function (d) {
-                this.toggle = !this.toggle; // declared variable setting it to true
+                this.toggle = !this.toggle; // declagrey variable setting it to true
                 d3.select(this)
                     .transition()
                     .duration(1000)
                     .attr("r", this.toggle ? 9 : 2)
-                    .style("fill", this.toggle ? "green" : "red");
+                    .style("fill", this.toggle ?  self.colors[self.colorCount]:"grey");
+                this.color = self.colors[self.colorCount]
+                    self.colorCount++;
                 if (this.toggle) {
                     personId = this.__data__.id_person
                     getPersonData()

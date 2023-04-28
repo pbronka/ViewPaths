@@ -1,6 +1,17 @@
 console.log("Lineplot");
 class LinePlot {
   constructor(tag, xLabel, yLable) {
+    this.colors=[
+      "#e41a1c",
+      "#377eb8",
+      "#4daf4a",
+      "#984ea3",
+      "#ff7f00",
+      "#ffff33",
+      "#a65628",
+      "#f781bf",
+      "#999999",
+    ]
     console.log(tag);
     var element = document.getElementById(tag);
     var bBox = element.getBoundingClientRect();
@@ -59,6 +70,7 @@ class LinePlot {
       .text(yLable); // Create a function that takes a dataset as input and update the plot:
   }
   update(data, groupby) {
+    console.log(data);
     const sumstat = d3.group(data, (d) => d[groupby]);
     let self = this;
     // Create the X axis:
@@ -85,17 +97,7 @@ class LinePlot {
     const chart = this.svg.selectAll(".lineTest").data(sumstat); //,function(d){return d["idx"]});
     const color = d3
       .scaleOrdinal()
-      .range([
-        "#e41a1c",
-        "#377eb8",
-        "#4daf4a",
-        "#984ea3",
-        "#ff7f00",
-        "#ffff33",
-        "#a65628",
-        "#f781bf",
-        "#999999",
-      ]);
+      .range(this.colors);
     // Updata the line
     chart
       .enter()

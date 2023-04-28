@@ -33,6 +33,18 @@ var fillSelect = function(menuId,functionId,data){
   }
 }
 
+var fillTable = function(data){
+  let head = "<tr>"
+  let c=0
+  for (f in data) {
+    strfun = 'plotchoice("'+data[f]+'")'
+    head += '<th style = "color: green; cursor: pointer;" id = "header'+data[f]+'" onclick='+strfun+'>'+data[f]+"</th>"
+    console.log(f);
+    c++; 
+  }
+  head+="</tr>" 
+  document.getElementById("pheader").innerHTML=head
+}
 var setXaxis = function(){
   let select = document.getElementById('xaxismenu');
   xAxis = select.options[select.selectedIndex].text;  
@@ -110,6 +122,7 @@ var headermenu = function (data) {
   fillSelect("xaxismenu","setXaxis",data)
   fillSelect("yaxismenu","setYaxis",data)
   getunique("time")
+  fillTable(data)
 }
 
 var getunique = function (header) {
@@ -164,18 +177,13 @@ var getPersonData = function () {
 };
 
 var outdata = function(data){
-  currentDataSet = data
-  let body = ""
-  let head = "<tr>"
-  //console.log(data);
-  let c = 0
-  for (let key in data[0]){
-    strfun = 'plotchoice("'+key+'")'
-    head += '<th style = "color: green; cursor: pointer;" id = "header'+key+'" onclick='+strfun+'>'+key+"</th>"
-    c++;
+  if(currentDataSet==null){
+    currentDataSet = data
   }
-  head+="</tr>" 
-  document.getElementById("pheader").innerHTML=head
+  else{
+    currentDataSet=currentDataSet.concat(data)
+  }
+  let body = ""
   for(let i=0 ;i< data.length;i++){
     body+="<tr>"
     for (let key in data[i]){
@@ -183,7 +191,7 @@ var outdata = function(data){
     }
     body+="</tr>"
   }
-  document.getElementById("pdata").innerHTML=body
+  document.getElementById("pdata").innerHTML+=body
   
 }
 
@@ -193,7 +201,7 @@ var plotchoice = function(key){
   let data =[]
   for(let i=0 ;i< currentDataSet.length;i++){
      console.log(currentDataSet[i][key]);
-     data.push({id:"1",date:currentDataSet[i].time,"value":currentDataSet[i][key]})
+     data.push({id:currentDataSet[i].id_person,date:currentDataSet[i].time,"value":currentDataSet[i][key]})
   }
   console.log(data);
   let line = new LinePlot("lineplot","Year",key)
