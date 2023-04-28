@@ -181,11 +181,15 @@ var outdata = function(data){
   else{
     currentDataSet=currentDataSet.concat(data)
   }
+  currentDataSet.sort(function(a,b) {
+    return b.time - a.time
+  });
+  document.getElementById("pdata").innerHTML=""
   let body = ""
-  for(let i=0 ;i< data.length;i++){
+  for(let i=0 ;i< currentDataSet.length;i++){
     body+="<tr>"
-    for (let key in data[i]){
-      body += '<td  >'+data[i][key]+"</td>"
+    for (let key in currentDataSet[i]){
+      body += '<td  >'+currentDataSet[i][key]+"</td>"
     }
     body+="</tr>"
   }
