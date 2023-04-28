@@ -6,7 +6,7 @@ var personId = ""
 
 var personIdData={}
 var currentDataSet=null
-
+var idcol={}
 
 var getdata = function(){
   if((time!='')&&(xAxis!="")&&(yAxis!="")){
@@ -14,6 +14,8 @@ var getdata = function(){
   }
 
 }
+
+
 
 var fillList = function(menuId,functionId,data){
   document.getElementById(menuId).innerHTML = ""
@@ -187,7 +189,9 @@ var outdata = function(data){
   document.getElementById("pdata").innerHTML=""
   let body = ""
   for(let i=0 ;i< currentDataSet.length;i++){
-    body+="<tr>"
+    id = currentDataSet[i].id_person
+    console.log(idcol);
+    body+='<tr style="background-color:'+idcol[id.toString()]+'">'
     for (let key in currentDataSet[i]){
       body += '<td  >'+currentDataSet[i][key]+"</td>"
     }

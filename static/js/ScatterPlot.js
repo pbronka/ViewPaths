@@ -198,13 +198,15 @@ class ScatterPlot {
                     .attr("r", this.toggle ? 9 : 2)
                     .style("fill", this.toggle ?  self.colors[self.colorCount]:"grey");
                 this.color = self.colors[self.colorCount]
-                    self.colorCount++;
                 if (this.toggle) {
                     personId = this.__data__.id_person
+                    idcol[personId.toString()] = self.colors[self.colorCount]
                     getPersonData()
+                    
                 } else {
                     personId = ""
                 }
+                self.colorCount++;
             })
             .attr("clip-path", "url(#clippy)");;;
         chart.attr("cx", function (dd) { return x(dd[xaxis]); }) // current data
