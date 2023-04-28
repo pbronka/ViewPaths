@@ -39,7 +39,6 @@ var fillTable = function(data){
   for (f in data) {
     strfun = 'plotchoice("'+data[f]+'")'
     head += '<th style = "color: green; cursor: pointer;" id = "header'+data[f]+'" onclick='+strfun+'>'+data[f]+"</th>"
-    console.log(f);
     c++; 
   }
   head+="</tr>" 
@@ -167,7 +166,6 @@ var getTestData = function () {
 
 var getPersonData = function () {
   var url = new URL("http://127.0.0.1:5432/getpersondata");
-  console.log(personId);
   url.searchParams.append("id_person", personId);
   fetch(url)
     // Handle success
@@ -200,13 +198,10 @@ var plotchoice = function(key){
   document.getElementById("header"+key).style.color = "red"
   let data =[]
   for(let i=0 ;i< currentDataSet.length;i++){
-     console.log(currentDataSet[i][key]);
      data.push({id:currentDataSet[i].id_person,date:currentDataSet[i].time,"value":currentDataSet[i][key]})
   }
-  console.log(data);
   let line = new LinePlot("lineplot","Year",key)
   line.update(data,"id")
 }
-console.log("main 0.0009");
 let scatter = new ScatterPlot("plot")
 getfiles()

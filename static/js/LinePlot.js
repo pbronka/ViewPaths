@@ -23,8 +23,8 @@ class LinePlot {
       (this.width = width - this.margin.left - this.margin.right),
       (this.height = height - this.margin.top - this.margin.bottom);
 
-    console.log(this.width, this.margin.left, this.margin.right);
-    console.log(this.height, this.margin.top, this.margin.bottom);
+    // console.log(this.width, this.margin.left, this.margin.right);
+    // console.log(this.height, this.margin.top, this.margin.bottom);
     // set the ranges
 
     // append the svg object to the body of the page
@@ -60,7 +60,7 @@ class LinePlot {
       .text(xLabel);
 
     // Y axis label:
-    let lab = "Petal Length";
+    
     this.svg
       .append("text")
       .attr("text-anchor", "end")

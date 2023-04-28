@@ -12,7 +12,6 @@ class ScatterPlot {
         "#f781bf",
         "#999999",
       ]
-      console.log(this.colors);
       this.colorCount = 0
       var element = document.getElementById(tag)
       var bBox = element.getBoundingClientRect()
@@ -20,7 +19,7 @@ class ScatterPlot {
       let width = bBox.width
       tag = "#"+tag
       // console.log(width,height);
-        this.margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        this.margin = { top: 20, right: 20, bottom: 40, left: 80 },
             this.width = width - this.margin.left - this.margin.right,
             this.height = height - this.margin.top - this.margin.bottom;
 
@@ -61,6 +60,7 @@ class ScatterPlot {
             )
         this.yBrush = this.yAxis.append("g")
         this.yBrush.attr("class", "brushY")
+          
 
         const clippingRect = this.plotArea
         .append("clipPath")
@@ -110,7 +110,13 @@ class ScatterPlot {
           
         this.brushX.on("end", updateX);
         this.xBrush.call(this.brushX);
-        
+        this.svg
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("x", this.width / 2 + this.margin.left - 5 * 4)
+      .attr("y", this.height + this.margin.top + 40)
+      .text(xaxis);
+
         var updateY= function (e) {
           if (e.selection!=null) {
             y.domain([  y.invert(e.selection[1]),y.invert(e.selection[0]), ])
@@ -124,6 +130,13 @@ class ScatterPlot {
         this.brushY.on("end", updateY);
         this.yBrush.call(this.brushY);
 
+        this.plotArea
+        .append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -this.margin.left + 20)
+        .attr("x", -this.margin.top - this.height / 2 )//+ yLable.length * 8)
+        .text(yaxis); // Create a function that takes a dataset as input and update the plot:
 
         
         let x = d3
@@ -153,7 +166,7 @@ class ScatterPlot {
             .enter().append("circle")// new data
             .attr("cx", function (dd) { return x(dd[xaxis]); })
             .attr("cy", function (dd) { return y(dd[yaxis]); })
-            .attr("r", 1)
+            .attr("r", 2)
             .style("fill", color)
             .on("click", function (d) {
                 this.toggle = !this.toggle; // declagrey variable setting it to true
