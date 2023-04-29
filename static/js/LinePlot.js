@@ -14,9 +14,10 @@ class LinePlot {
     ]
     console.log(tag);
     var element = document.getElementById(tag);
+    element.style.visibility='visible'
     var bBox = element.getBoundingClientRect();
-    let height = bBox.height;
-    let width = bBox.width;
+    let height = 400;
+    let width = bBox.width-10;
     tag = "#" + tag;
     console.log(width, height);
     (this.margin = { top: 20, right: 20, bottom: 60, left: 100 }),
@@ -66,7 +67,7 @@ class LinePlot {
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
       .attr("y", -this.margin.left + 20)
-      .attr("x", -this.margin.top - this.height / 2 )//+ yLable.length * 8)
+      .attr("x", -this.margin.top - this.height / 2 + yLable.length * 2)
       .text(yLable); // Create a function that takes a dataset as input and update the plot:
   }
   update(data, groupby) {

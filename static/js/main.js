@@ -1,5 +1,5 @@
 var fileChoice = ""
-var time = ""
+var time = "2013"
 var xAxis = "dag"
 var yAxis = "potentialearnings"
 var personId = ""
@@ -190,7 +190,6 @@ var outdata = function(data){
   let body = ""
   for(let i=0 ;i< currentDataSet.length;i++){
     id = currentDataSet[i].id_person
-    console.log(idcol);
     body+='<tr style="background-color:'+idcol[id.toString()]+'">'
     for (let key in currentDataSet[i]){
       body += '<td style="color:#ffffff" >'+currentDataSet[i][key]+"</td>"
@@ -199,6 +198,44 @@ var outdata = function(data){
   }
   document.getElementById("pdata").innerHTML+=body
   
+}
+
+var clearGraph = function(){
+  console.log("clear");
+  fileChoice = ""
+  time = "2013"
+  xAxis = ""
+  yAxis = ""
+  personId = ""
+  
+  personIdData={}
+  currentDataSet=null
+  idcol={}
+  document.getElementById("lineplot").innerHTML=""
+  var res = document.getElementById("pheader").getElementsByTagName('th');
+  for(el in res){
+    if(res[el]== Object){
+      res[el].style.color = "green"    
+    }
+  }
+  document.getElementById("pdata").innerHTML =""
+  document.getElementById("plot").innerHTML=""
+  scatter = new ScatterPlot("plot")
+  getfiles()
+}
+
+var clearSelect = function(){
+  console.log("clear");
+  personId = ""
+  personIdData={}
+  currentDataSet=null
+  idcol={}
+  document.getElementById("lineplot").innerHTML=""
+  document.getElementById("pdata").innerHTML =""
+  document.getElementById("plot").innerHTML=""
+  scatter = new ScatterPlot("plot")
+  document.getElementById("lineplot").style.visibility='hidden'
+  getdata()
 }
 
 var plotchoice = function(key){

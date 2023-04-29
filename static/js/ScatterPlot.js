@@ -113,8 +113,8 @@ class ScatterPlot {
         this.svg
       .append("text")
       .attr("text-anchor", "end")
-      .attr("x", this.width / 2 + this.margin.left - 5 * 4)
-      .attr("y", this.height + this.margin.top + 40)
+      .attr("x", this.width / 2 + this.margin.left +(xaxis.length)*2)
+      .attr("y", this.height + this.margin.top + 32)
       .text(xaxis);
 
         var updateY= function (e) {
@@ -135,7 +135,7 @@ class ScatterPlot {
         .attr("text-anchor", "end")
         .attr("transform", "rotate(-90)")
         .attr("y", -this.margin.left + 20)
-        .attr("x", -this.margin.top - this.height / 2 )//+ yLable.length * 8)
+        .attr("x", -this.margin.top - this.height / 2 + yaxis.length * 2)
         .text(yaxis); // Create a function that takes a dataset as input and update the plot:
 
         
