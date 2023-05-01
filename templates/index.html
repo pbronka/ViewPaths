@@ -24,27 +24,27 @@
     margin-bottom: 20px;">
       <div class="row">
         <div class="col-sm-3" ">
-        <div class=" form-group">
-          <label id="filelable">Files:</label>
-          <select multiple class="form-control" id="filemenu">
+          <div class=" form-group">
+            <label id="filelable">Files:</label>
+            <select multiple class="form-control" id="filemenu">
             <option>&nbsp </option>
             <option>&nbsp </option>
             <option>&nbsp </option>
             <option>&nbsp </option>
-          </select>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="col-sm-3" ">
-        <div class=" form-group">
-        <label for="usr">Time:</label>
-        <select multiple class="form-control" id="groupbymenu">
-          <option>&nbsp </option>
-          <option>&nbsp </option>
-          <option>&nbsp </option>
-          <option>&nbsp </option>
-        </select>
-      </div>
-    </div>
+        <div class="col-sm-3" ">
+          <div class=" form-group">
+            <label for="usr">Time:</label>
+            <select multiple class="form-control" id="timemenu">
+              <option>&nbsp </option>
+              <option>&nbsp </option>
+              <option>&nbsp </option>
+              <option>&nbsp </option>
+            </select>
+          </div>
+        </div>
     <div class="col-sm-3" ">
         <div class=" form-group">
       <label for="usr">X-axis:</label>
@@ -82,6 +82,13 @@
     margin-bottom: 20px;">
     <div class="row">
       <div class="col-sm-6">
+        <div class="col-sm-3" ">
+          <div class=" form-group">
+            <label for="usr">Time:</label>
+            <select style="width:200px" class="form-control" id="groupbymenu">
+            </select>
+          </div>
+        </div>
         <svg id="plot" style="width: 98%; height: 500px"></svg>
       </div>
       <div class="col-sm-6">

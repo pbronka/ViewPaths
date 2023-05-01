@@ -27,6 +27,7 @@ var fillList = function(menuId,functionId,data){
 }
 
 var fillSelect = function(menuId,functionId,data){
+  console.log(menuId);
   document.getElementById(menuId).innerHTML = ""
   for (f in data) {
     fstring = "'"+data[f]+"'"
@@ -51,6 +52,13 @@ var setXaxis = function(){
   xAxis = select.options[select.selectedIndex].text;  
   getdata()
 }
+
+var setTime = function(){
+  let select = document.getElementById('timemenu');
+  let time = select.options[select.selectedIndex].text;  
+  getunique(time)
+}
+
 var setYaxis = function(){
   let select = document.getElementById('yaxismenu');
   yAxis= select.options[select.selectedIndex].text;  
@@ -66,12 +74,13 @@ var setGroup = function(){
 
 
 
-var headermenu = function (data) {
-  document.getElementById("filelable").innerHTML="Files"
-  fillList("headermenu","getunique",data)
-  fillSelect("xaxismenu","setXaxis",data)
-  fillSelect("yaxismenu","setYaxis",data)
-}
+// var headermenu = function (data) {
+//   document.getElementById("filelable").innerHTML="Files"
+//   fillList("headermenu","getunique",data)
+//   fillSelect("xaxismenu","setXaxis",data)
+//   fillSelect("yaxismenu","setYaxis",data)
+//   fillSelect("timemenu","setTime",data)
+// }
 
 
 var groupbymenu = function (data) {
@@ -122,8 +131,9 @@ var headermenu = function (data) {
   // fillList("headermenu","getunique",data)
   fillSelect("xaxismenu","setXaxis",data)
   fillSelect("yaxismenu","setYaxis",data)
-  getunique("time")
+  fillSelect("timemenu","setTime",data)
   fillTable(data)
+
 }
 
 var getunique = function (header) {
