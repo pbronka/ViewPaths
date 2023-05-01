@@ -2,6 +2,7 @@ var fileChoice = ""
 var time = "2013"
 var xAxis = "dag"
 var yAxis = "potentialearnings"
+var groupby =""
 var personId = ""
 
 var personIdData={}
@@ -57,6 +58,7 @@ var setTime = function(){
   let select = document.getElementById('timemenu');
   let time = select.options[select.selectedIndex].text;  
   document.getElementById("groupbylabel").innerHTML=time
+  groupby = time
   getunique(time)
 }
 
@@ -256,7 +258,7 @@ var plotchoice = function(key){
   for(let i=0 ;i< currentDataSet.length;i++){
      data.push({id:currentDataSet[i].id_person,date:currentDataSet[i].time,"value":currentDataSet[i][key]})
   }
-  let line = new LinePlot("lineplot","Year",key)
+  let line = new LinePlot("lineplot",groupby,key)
   line.update(data,"id")
 }
 let scatter = new ScatterPlot("plot")
