@@ -40,8 +40,17 @@ class LinePlot {
       .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
 
     // Initialise a X axis:
+
+
+    var locale = d3.formatLocale({
+      thousands: "",
+    });
+    
+    var format = locale.format(".0f");
+
     this.x = d3.scaleLinear().range([0, this.width]);
-    this.xAxis = d3.axisBottom().scale(this.x);
+    this.xAxis = d3.axisBottom().scale(this.x).tickFormat(format)
+    //.tickFormat(''axisFormatLocale.format('')'');;
     this.svg
       .append("g")
       .attr("transform", `translate(0, ${this.height})`)
