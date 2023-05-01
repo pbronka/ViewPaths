@@ -56,6 +56,7 @@ var setXaxis = function(){
 var setTime = function(){
   let select = document.getElementById('timemenu');
   let time = select.options[select.selectedIndex].text;  
+  document.getElementById("groupbylabel").innerHTML=time
   getunique(time)
 }
 
