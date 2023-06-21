@@ -1,0 +1,9 @@
+1. Would be nice to be able to deselect columns without clearing everything
+2. Clicking multiple times on an already selected column adds multiple identical graphs
+4. Negative numbers are not displayed correctly, e.g. select dcpagdf as one of the columns
+5. Selecting another observation from the correlation graph doesn't add new line to longitudinal graphs which were already displayed
+3. We will need a way of displaying categorical variables, both in correlation graph and in longitudinal graphs
+6. Changing the time doesn't refresh the correlation graph => It works in FireFox.
+7. It would be nice to be able to link variables from different files, e.g. so household values can be visualized for individuals
+
+ 
